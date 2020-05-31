@@ -6,8 +6,6 @@ from json import dumps
 import sys
 
 def start_producer():
-    # json_url = "http://10.142.208.192:8085/sensors.json"
-    # json_url_string = "http://192.168.2.241:8085/sensors.json"
     json_url_string = "http://" + phoneipaddress + ":8085/sensors.json"
 
     producer = KafkaProducer(bootstrap_servers=[kafkaserver],
@@ -25,9 +23,9 @@ def start_producer():
 
 if __name__ == '__main__':
 
-    kafkaserver     = sys.argv[1] #Kafka server IP Address and Port
-    topic           = sys.argv[2] #topic
-    phoneipaddress  = sys.argv[3]# Phone IP Address
+    kafkaserver     = sys.argv[1]   # Kafka server IP Address and Port ie 192.168.1.52:9092
+    topic           = sys.argv[2]   # Kafka topic ie kafka_test
+    phoneipaddress  = sys.argv[3]   # IP Address of the Phone where IPWebcam is running ie 192.168.2.241
 
     start_producer()
 
