@@ -22,13 +22,14 @@ Install Kafka on linux environment is straight forward.
 
 
     .
+    
     ├── Kafka                    
     │   ├── bin              
     │   ├── config           
     │   ├── lib             
     │   ├── logs            
     │   ├── data            
-    │   │   ├── zookeeper
+    │   │   ├── zookeeper   
     │   │   ├── kafka
             
             
