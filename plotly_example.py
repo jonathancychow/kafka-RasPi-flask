@@ -17,15 +17,17 @@ def random_num():
     z =random.uniform(0,100)
     return x,y,z
 
-def GetjsonData(accel, timestamp):
+accel = []
+timestamp = []
+
+def GetjsonData():
     json_ipaddress = "http://192.168.2.241:8085/sensors.json"
     json_data = urlopen(json_ipaddress)
     data = json.loads(json_data.read())
-    accel = []
-    timestamp = []
-    # len(data['accel']['data'])
-    # for i in range(50):
-    # print('length of data', (len(data['accel']['data'])))
+
+    global accel
+    global timestamp
+
     for i in range((len(data['accel']['data']) - 30), len(data['accel']['data'])):
         accel.append(data['accel']['data'][i][1][1])
         timestamp.append(data['accel']['data'][i][0] / 1000)
@@ -63,20 +65,8 @@ def update_metrics(n):
 def update_graph_live(n):
     data = {
         'time': [],
-        'x': [],
-        'y': [],
-        'z': []
+        'x': []
     }
-
-    # Collect some data, how many points on the graph
-    # for i in range(30):
-    #     time = datetime.datetime.now() - datetime.timedelta(seconds=i*1)
-    #     x, y, z = random_num()
-    #
-    #     data['x'].append(x)
-    #     data['y'].append(y)
-    #     data['z'].append(z)
-    #     data['time'].append(time)
 
     accel, time = GetjsonData()
     data['time'] = time
@@ -87,7 +77,6 @@ def update_graph_live(n):
     # fig =  go.Figure(data=go.Scatter(x=x, y=x ** 2))
     # read this, seems helpful https: // plotly.com / python / line - charts /
     fig['layout']['margin'] = {
-
         'l': 30, 'r': 10, 'b': 30, 't': 10
     }
     fig['layout']['legend'] = {'x': 0, 'y': 1, 'xanchor': 'left'}
@@ -99,7 +88,6 @@ def update_graph_live(n):
         'mode': 'lines+markers',
         'type': 'scatter'
     }, 1, 1)
-
 
     return fig
 
