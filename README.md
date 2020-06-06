@@ -20,7 +20,6 @@ Install Kafka on linux environment is straight forward.
 - I unzipped under Document. Create a sub folder called data, following by zookeeper and kafka underneath.
   The directory structure should look as follow: 
 
-
     .
     
     ├── Kafka                    
@@ -69,16 +68,22 @@ poetry install
 Use the following command, arguments in this specific order to run the script.
 More information will be available in the future.  
 
+- First of all you will need to start IPWebCam from your phone to broadcast accelerometer data to your network. 
+- Start IPWebCam2KafkaProducer.py, this script read the json data then write the data to Kafka Producer. 
  ```bash
  python IPWebCam2KafkaProducer.py 192.168.2.52:9092 kafkapokearound 192.168.2.241 
 ```
-
+- You can then start IPWebCam2KafkaConsumer.py, this script read the data from Kafka Consumer then print it out on the command prompt
 
  ```bash
  python IPWebCam2KafkaConsumer.py 192.168.2.52:9092 kafkapokearound 
 ```
-
+- If the above script is working, you can move on broadcast the data to Flask front end 
 
 ```bash
 python ConsumerFrontend.py 192.168.2.52 192.168.2.52:9092 kafkapokearound
 ```
+
+## Contact 
+- Github: https://github.com/jonathancychow
+- Email:  jonathan@cychow.co.uk
