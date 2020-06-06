@@ -65,10 +65,18 @@ pip install poetry
 poetry install 
 ``` 
 ## Get Going
+
 Use the following command, arguments in this specific order to run the script.
 More information will be available in the future.  
 
 - First of all you will need to start IPWebCam from your phone to broadcast accelerometer data to your network. 
+<p align="center">
+<img src="image/IPWebCam_startserver.jpg" width="200">
+</p>
+<p align="center">
+<img src="image/IPWebCam_streaming.jpg" width="400">
+</p>
+
 - Start IPWebCam2KafkaProducer.py, this script read the json data then write the data to Kafka Producer. 
  ```bash
  python IPWebCam2KafkaProducer.py 192.168.2.52:9092 kafkapokearound 192.168.2.241 
