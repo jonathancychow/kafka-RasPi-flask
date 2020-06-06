@@ -8,6 +8,7 @@ import plotly
 from dash.dependencies import Input, Output
 from urllib.request import urlopen
 import json
+import plotly.graph_objects as go
 
 def random_num():
     import random
@@ -16,7 +17,7 @@ def random_num():
     z =random.uniform(0,100)
     return x,y,z
 
-def GetjsonData():
+def GetjsonData(accel, timestamp):
     json_ipaddress = "http://192.168.2.241:8085/sensors.json"
     json_data = urlopen(json_ipaddress)
     data = json.loads(json_data.read())
@@ -68,22 +69,25 @@ def update_graph_live(n):
     }
 
     # Collect some data, how many points on the graph
-    for i in range(30):
-        time = datetime.datetime.now() - datetime.timedelta(seconds=i*1)
-        x, y, z = random_num()
-
-        data['x'].append(x)
-        data['y'].append(y)
-        data['z'].append(z)
-        data['time'].append(time)
+    # for i in range(30):
+    #     time = datetime.datetime.now() - datetime.timedelta(seconds=i*1)
+    #     x, y, z = random_num()
+    #
+    #     data['x'].append(x)
+    #     data['y'].append(y)
+    #     data['z'].append(z)
+    #     data['time'].append(time)
 
     accel, time = GetjsonData()
-    # data['time'].append(accel)
+    data['time'] = time
     data['x'] = accel
 
     # Create the graph with subplots
     fig = plotly.tools.make_subplots(rows=1, cols=1, vertical_spacing=0.2)
+    # fig =  go.Figure(data=go.Scatter(x=x, y=x ** 2))
+    # read this, seems helpful https: // plotly.com / python / line - charts /
     fig['layout']['margin'] = {
+
         'l': 30, 'r': 10, 'b': 30, 't': 10
     }
     fig['layout']['legend'] = {'x': 0, 'y': 1, 'xanchor': 'left'}
