@@ -6,6 +6,8 @@ import dash_core_components as dcc
 import dash_html_components as html
 import plotly
 from dash.dependencies import Input, Output
+from urllib.request import urlopen
+import json
 
 def random_num():
     import random
@@ -13,6 +15,21 @@ def random_num():
     y =random.uniform(0,100)
     z =random.uniform(0,100)
     return x,y,z
+
+def GetjsonData():
+    json_ipaddress = "http://192.168.2.241:8085/sensors.json"
+    json_data = urlopen(json_ipaddress)
+    data = json.loads(json_data.read())
+    accel = []
+    timestamp = []
+    # len(data['accel']['data'])
+    # for i in range(50):
+    # print('length of data', (len(data['accel']['data'])))
+    for i in range((len(data['accel']['data']) - 30), len(data['accel']['data'])):
+        accel.append(data['accel']['data'][i][1][1])
+        timestamp.append(data['accel']['data'][i][0] / 1000)
+    time = [datetime.datetime.fromtimestamp(ts) for ts in timestamp]
+    return accel, time
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
@@ -55,10 +72,14 @@ def update_graph_live(n):
         time = datetime.datetime.now() - datetime.timedelta(seconds=i*1)
         x, y, z = random_num()
 
-        data['y'].append(x)
-        data['x'].append(y)
+        data['x'].append(x)
+        data['y'].append(y)
         data['z'].append(z)
         data['time'].append(time)
+
+    accel, time = GetjsonData()
+    # data['time'].append(accel)
+    data['x'] = accel
 
     # Create the graph with subplots
     fig = plotly.tools.make_subplots(rows=1, cols=1, vertical_spacing=0.2)
@@ -69,7 +90,7 @@ def update_graph_live(n):
 
     fig.append_trace({
         'x': data['time'],
-        'y': data['z'],
+        'y': data['x'],
         'name': 'Altitude',
         'mode': 'lines+markers',
         'type': 'scatter'
