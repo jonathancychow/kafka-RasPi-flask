@@ -1,5 +1,4 @@
 # Inspired by https://dash.plotly.com/live-updates
-
 import datetime
 import dash
 import dash_core_components as dcc
@@ -73,21 +72,24 @@ def update_graph_live(n):
     data['x'] = accel
 
     # Create the graph with subplots
-    fig = plotly.tools.make_subplots(rows=1, cols=1, vertical_spacing=0.2)
-    # fig =  go.Figure(data=go.Scatter(x=x, y=x ** 2))
-    # read this, seems helpful https: // plotly.com / python / line - charts /
-    fig['layout']['margin'] = {
-        'l': 30, 'r': 10, 'b': 30, 't': 10
-    }
-    fig['layout']['legend'] = {'x': 0, 'y': 1, 'xanchor': 'left'}
+    # fig = plotly.tools.make_subplots(rows=1, cols=1, vertical_spacing=0.2)
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(x=data['time'], y=data['x'],
+                             mode='lines+markers',
+                             name='lines+markers'))
 
-    fig.append_trace({
-        'x': data['time'],
-        'y': data['x'],
-        'name': 'Altitude',
-        'mode': 'lines+markers',
-        'type': 'scatter'
-    }, 1, 1)
+    # fig['layout']['margin'] = {
+    #     'l': 30, 'r': 10, 'b': 30, 't': 10
+    # }
+    # fig['layout']['legend'] = {'x': 0, 'y': 1, 'xanchor': 'left'}
+
+    # fig.append_trace({
+    #     'x': data['time'],
+    #     'y': data['x'],
+    #     'name': 'Altitude',
+    #     'mode': 'lines+markers',
+    #     'type': 'scatter'
+    # }, 1, 1)
 
     return fig
 
