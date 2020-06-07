@@ -12,7 +12,9 @@ def start_consumer():
         stringdata = rawdata.decode()
         listdata = json.loads((stringdata))
         timestamp = listdata[0]
+        gVert = listdata[1][1]
         print (timestamp)
+        print (gVert)
 
 if __name__ == '__main__':
 
