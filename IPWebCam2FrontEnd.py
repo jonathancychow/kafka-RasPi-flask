@@ -8,6 +8,7 @@ from dash.dependencies import Input, Output
 from urllib.request import urlopen
 import json
 import plotly.graph_objects as go
+import sys
 
 def random_num():
     import random
@@ -95,6 +96,9 @@ def update_graph_live(n):
 
 
 if __name__ == '__main__':
-    # hostport = sys.argv[1]
-    hostport = 8050
-    app.run_server(debug=True, port=hostport)
+    # hostip    = sys.argv[1]
+    # hostport  = sys.argv[2]
+    hostip      = sys.argv[1]
+    hostport    = sys.argv[2]
+
+    app.run_server(debug=True, port=hostport, host=hostip)

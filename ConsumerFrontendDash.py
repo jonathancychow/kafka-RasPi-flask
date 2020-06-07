@@ -20,8 +20,8 @@ def random_num():
 
 def get_kafka_client():
     # return KafkaClient(hosts='192.168.2.52:9092')
-    kafkaserver = sys.argv[2]
-    topic = sys.argv[3]
+    kafkaserver = sys.argv[3]
+    topic = sys.argv[4]
     return KafkaConsumer(topic, bootstrap_servers=[kafkaserver])
 
 accel = []
@@ -75,13 +75,30 @@ def update_graph_live(n):
         'x': []
     }
 
-    accel, time = GetjsonData()
-    data['time'] = time
-    data['x'] = accel
+    # accel, time = GetjsonData()
+    # data['time'] = time
+    # data['x'] = accel
+
+    global accel
+    global timestamp
 
     client = get_kafka_client()
     for msg in client:
         print (msg.value)
+        # pring out value in msg, could have printed out the whole message as well
+        rawdata = msg.value
+        stringdata = rawdata.decode()
+        listdata = json.loads((stringdata))
+        ts = listdata[0]
+        gVert = listdata[1][1]
+        print(ts)
+        print(gVert)
+
+    accel.append(gVert)
+    timestamp.append(datetime.datetime.fromtimestamp(ts))
+
+    data['time'] = timestamp
+    data['x'] = accel
 
     # Create the graph with subplots
     # fig = plotly.tools.make_subplots(rows=1, cols=1, vertical_spacing=0.2)
@@ -107,9 +124,12 @@ def update_graph_live(n):
 
 
 if __name__ == '__main__':
-    # argv[1] = host port
-    # argv[2] = Kafka server IP Address and Port
-    # argv[3] = topic
+    # argv[1] = host ipaddress
+    # argv[2] = host port
+    # argv[3] = Kafka server IP Address and Port
+    # argv[4] = topic
 
-    hostport = 8050
+    ipaddress   =   sys.argv[1]
+    hostport    =   sys.argv[2]
+
     app.run_server(debug=True, port=hostport)
