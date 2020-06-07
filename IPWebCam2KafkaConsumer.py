@@ -1,13 +1,18 @@
 
 from kafka import KafkaConsumer
 import sys
+import json
 
 def start_consumer():
     # Construct kafka consumer object
     consumer = KafkaConsumer(topic, bootstrap_servers=[kafkaserver])
     for msg in consumer:
         # pring out value in msg, could have printed out the whole message as well
-        print (msg.value)
+        rawdata = msg.value
+        stringdata = rawdata.decode()
+        listdata = json.loads((stringdata))
+        timestamp = listdata[0]
+        print (timestamp)
 
 if __name__ == '__main__':
 
