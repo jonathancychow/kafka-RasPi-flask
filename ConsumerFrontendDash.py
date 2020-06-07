@@ -8,6 +8,8 @@ from dash.dependencies import Input, Output
 from urllib.request import urlopen
 import json
 import plotly.graph_objects as go
+from kafka import KafkaConsumer
+import sys
 
 def random_num():
     import random
@@ -15,6 +17,12 @@ def random_num():
     y =random.uniform(0,100)
     z =random.uniform(0,100)
     return x,y,z
+
+def get_kafka_client():
+    # return KafkaClient(hosts='192.168.2.52:9092')
+    kafkaserver = sys.argv[2]
+    topic = sys.argv[3]
+    return KafkaConsumer(topic, bootstrap_servers=[kafkaserver])
 
 accel = []
 timestamp = []
@@ -71,6 +79,10 @@ def update_graph_live(n):
     data['time'] = time
     data['x'] = accel
 
+    client = get_kafka_client()
+    for msg in client:
+        print (msg.value)
+
     # Create the graph with subplots
     # fig = plotly.tools.make_subplots(rows=1, cols=1, vertical_spacing=0.2)
     fig = go.Figure()
@@ -95,6 +107,9 @@ def update_graph_live(n):
 
 
 if __name__ == '__main__':
-    # hostport = sys.argv[1]
+    # argv[1] = host port
+    # argv[2] = Kafka server IP Address and Port
+    # argv[3] = topic
+
     hostport = 8050
     app.run_server(debug=True, port=hostport)
