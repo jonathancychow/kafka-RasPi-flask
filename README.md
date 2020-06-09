@@ -13,7 +13,10 @@ Flask is used as the front end to display message from Kafka and display on a we
     - I run this Android app on my phone.  
     
 ## Kafka Installation 
-Install Kafka on linux environment is straight forward. 
+Install Kafka on linux environment is straight forward. You could see the following YouTube tutorial for detailed instruction. 
+
+[![](image/YoutubeScreenShot.PNG)](https://youtu.be/yq4rLLZhmWU)
+
 - Download Kafka from the official Apache Kafka [site.](https://kafka.apache.org/downloads) 
 - Unzip the tar file to your desired location.  
 #### Directory Structure
