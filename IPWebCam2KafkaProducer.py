@@ -16,8 +16,9 @@ def start_producer():
         data = json.loads(json_url.read())
 
         for j in range(20):
-            data2kfaka = data['accel']['data'][i][1][1]
-            Data2KfakaFormat = {'gVert' : data2kfaka}
+            data2kfaka = data['accel']['data'][j]
+            # Data2KfakaFormat = {'gVert' : data2kfaka}
+            Data2KfakaFormat = data2kfaka
             print(Data2KfakaFormat)
             producer.send(topic, value=Data2KfakaFormat)
 
