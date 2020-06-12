@@ -19,7 +19,6 @@ def random_num():
     return x,y,z
 
 def get_kafka_client():
-    # return KafkaClient(hosts='192.168.2.52:9092')
     kafkaserver = sys.argv[3]
     topic = sys.argv[4]
     return KafkaConsumer(topic, bootstrap_servers=[kafkaserver])
@@ -28,15 +27,20 @@ accel = []
 timestamp = []
 def GetKafkaData():
     client = get_kafka_client()
-    # for msg in client:
+    # gVert=[]
+    # ts=[]
+    for msg in client:
     #     print(msg.value)
     #     # pring out value in msg, could have printed out the whole message as well
-    rawdata = client.value
-    stringdata = rawdata.decode()
-    listdata = json.loads((stringdata))
-    ts = listdata[0]
-    gVert = listdata[1][1]
-    return gVert, ts
+        rawdata = msg.value
+        stringdata = rawdata.decode()
+        listdata = json.loads((stringdata))
+        ts = listdata[0]
+        gVert = listdata[1][1]
+        # ts.append(listdata[0])
+        # gVert.append(listdata[1][1])
+
+        return gVert, ts
 
 
 def GetjsonData():
@@ -96,20 +100,9 @@ def update_graph_live(n):
     global accel
     global timestamp
 
-    # client = get_kafka_client()
-    # for msg in client:
-    #     print (msg.value)
-    #     # pring out value in msg, could have printed out the whole message as well
-    #     rawdata = msg.value
-    #     stringdata = rawdata.decode()
-    #     listdata = json.loads((stringdata))
-    #     ts = listdata[0]
-    #     gVert = listdata[1][1]
-    #     print(ts)
-    #     print(gVert)
-
     accel.append(gVert)
-    timestamp.append(datetime.datetime.fromtimestamp(ts))
+    # timestamp.append(datetime.datetime.fromtimestamp(ts))
+    timestamp.append(datetime.datetime.fromtimestamp(ts/1000))
 
     data['time'] = timestamp
     data['x'] = accel
