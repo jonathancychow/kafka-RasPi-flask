@@ -21,20 +21,25 @@ def random_num():
 def get_kafka_client():
     kafkaserver = sys.argv[3]
     topic = sys.argv[4]
-    return KafkaConsumer(topic, bootstrap_servers=[kafkaserver])
+    return KafkaConsumer(topic,
+                         bootstrap_servers=[kafkaserver],
+                         value_deserializer=lambda m: json.loads(m.decode('ascii')))
 
 accel = []
 timestamp = []
 def GetKafkaData():
     client = get_kafka_client()
-    # gVert=[]
-    # ts=[]
+    gVert=[]
+    ts=[]
     for msg in client:
     #     print(msg.value)
     #     # pring out value in msg, could have printed out the whole message as well
         rawdata = msg.value
-        stringdata = rawdata.decode()
-        listdata = json.loads((stringdata))
+        # stringdata = rawdata.decode()
+        stringdata = rawdata
+        # listdata = json.loads((stringdata))
+        listdata = stringdata
+
         ts = listdata[0]
         gVert = listdata[1][1]
         # ts.append(listdata[0])
