@@ -26,6 +26,18 @@ def get_kafka_client():
 
 accel = []
 timestamp = []
+def GetKafkaData():
+    client = get_kafka_client()
+    # for msg in client:
+    #     print(msg.value)
+    #     # pring out value in msg, could have printed out the whole message as well
+    rawdata = client.value
+    stringdata = rawdata.decode()
+    listdata = json.loads((stringdata))
+    ts = listdata[0]
+    gVert = listdata[1][1]
+    return gVert, ts
+
 
 def GetjsonData():
     json_ipaddress = "http://192.168.2.241:8085/sensors.json"
@@ -79,20 +91,22 @@ def update_graph_live(n):
     # data['time'] = time
     # data['x'] = accel
 
+    gVert, ts = GetKafkaData()
+
     global accel
     global timestamp
 
-    client = get_kafka_client()
-    for msg in client:
-        print (msg.value)
-        # pring out value in msg, could have printed out the whole message as well
-        rawdata = msg.value
-        stringdata = rawdata.decode()
-        listdata = json.loads((stringdata))
-        ts = listdata[0]
-        gVert = listdata[1][1]
-        print(ts)
-        print(gVert)
+    # client = get_kafka_client()
+    # for msg in client:
+    #     print (msg.value)
+    #     # pring out value in msg, could have printed out the whole message as well
+    #     rawdata = msg.value
+    #     stringdata = rawdata.decode()
+    #     listdata = json.loads((stringdata))
+    #     ts = listdata[0]
+    #     gVert = listdata[1][1]
+    #     print(ts)
+    #     print(gVert)
 
     accel.append(gVert)
     timestamp.append(datetime.datetime.fromtimestamp(ts))
@@ -132,4 +146,4 @@ if __name__ == '__main__':
     ipaddress   =   sys.argv[1]
     hostport    =   sys.argv[2]
 
-    app.run_server(debug=True, port=hostport)
+    app.run_server(debug=True, port=hostport, host=ipaddress)
