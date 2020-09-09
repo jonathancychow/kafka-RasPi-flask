@@ -9,6 +9,8 @@ from urllib.request import urlopen
 import json
 import plotly.graph_objects as go
 import sys
+import math
+import time
 
 def random_num():
     import random
@@ -21,18 +23,22 @@ accel = []
 timestamp = []
 
 def GetjsonData():
-    json_ipaddress = "http://192.168.2.241:8085/sensors.json"
+
+    time_now = time.time() * 1000
+    print(time_now)
+    json_ipaddress = 'http://192.168.2.241:8085/sensors.json' + '?from=' + str(math.floor(time_now))
+    # json_ipaddress = "http://192.168.2.241:8085/sensors.json"
+
     json_data = urlopen(json_ipaddress)
     data = json.loads(json_data.read())
 
     global accel
     global timestamp
 
-    for i in range((len(data['accel']['data']) - 30), len(data['accel']['data'])):
-        accel.append(data['accel']['data'][i][1][1])
-        timestamp.append(data['accel']['data'][i][0] / 1000)
-    time = [datetime.datetime.fromtimestamp(ts) for ts in timestamp]
-    return accel, time
+    accel.append(data['accel']['data'][0][1][1])
+    timestamp.append(datetime.datetime.fromtimestamp(data['accel']['data'][0][0] / 1000))
+
+    return accel, timestamp
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
@@ -68,8 +74,8 @@ def update_graph_live(n):
         'x': []
     }
 
-    accel, time = GetjsonData()
-    data['time'] = time
+    accel, Time = GetjsonData()
+    data['time'] = Time
     data['x'] = accel
 
     # Create the graph with subplots
@@ -86,7 +92,7 @@ def update_graph_live(n):
 
     # fig.append_trace({
     #     'x': data['time'],
-    #     'y': data['x'],
+    #     'y': data['x']
     #     'name': 'Altitude',
     #     'mode': 'lines+markers',
     #     'type': 'scatter'
